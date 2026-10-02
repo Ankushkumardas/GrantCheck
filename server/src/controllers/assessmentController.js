@@ -95,8 +95,7 @@ async function uploadGuideline(req, res, next) {
     }
 
     // Extract PDF text and pages
-    const { pageCount, extractedText, chunks } = await extractPdfContent(filePath, req.file.originalname);
-    removeTempFile(filePath); // Delete temporary file immediately after extraction
+    const { pageCount, extractedText, chunks } = await extractPdfContent(req.file.buffer, req.file.originalname);
 
     // Increment guideline version if replacing
     const newVersion = assessment.guidelineDocId ? assessment.guidelineVersion + 1 : 1;
@@ -165,8 +164,7 @@ async function uploadApplication(req, res, next) {
     }
 
     // Extract PDF text and pages
-    const { pageCount, extractedText, chunks } = await extractPdfContent(filePath, req.file.originalname);
-    removeTempFile(filePath); // Delete temporary file immediately after extraction
+    const { pageCount, extractedText, chunks } = await extractPdfContent(req.file.buffer, req.file.originalname);
 
     // Increment application version if replacing
     const newVersion = assessment.applicationDocId ? assessment.applicationVersion + 1 : 1;
@@ -238,8 +236,7 @@ async function uploadSupportingDocuments(req, res, next) {
 
     for (const file of files) {
       try {
-        const { pageCount, extractedText, chunks } = await extractPdfContent(file.path, file.originalname);
-        removeTempFile(file.path);
+        const { pageCount, extractedText, chunks } = await extractPdfContent(file.buffer, file.originalname);
 
         const doc = new Document({
           assessmentId: assessment._id,
