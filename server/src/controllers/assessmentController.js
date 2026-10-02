@@ -15,9 +15,22 @@ const logger = require('../config/logger');
 async function createAssessment(req, res, next) {
   try {
     const { title } = req.body;
+    const trimmedTitle = (title || 'Grant Application Review').trim();
     
+    // Check for duplicate title (case-insensitive)
+    const existing = await Assessment.findOne({
+      title: { $regex: new RegExp(`^${trimmedTitle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') }
+    });
+
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        message: `An assessment with the title "${trimmedTitle}" already exists. Please choose a unique title.`
+      });
+    }
+
     const assessment = new Assessment({
-      title: title || 'Grant Application Review',
+      title: trimmedTitle,
       createdBy: req.user?.email || 'demo@example.com',
       status: 'DRAFT'
     });

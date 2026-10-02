@@ -29,16 +29,29 @@ describe('Full Assessment API Integration Test', () => {
     authToken = res.body.token;
   });
 
+  const testTitle = `Community Action Grant Test ${Date.now()}`;
+
   it('POST /api/assessments should create a new assessment draft', async () => {
     const res = await request(app)
       .post('/api/assessments')
       .set('Authorization', `Bearer ${authToken}`)
-      .send({ title: 'Community Action Grant 2026 Test' });
+      .send({ title: testTitle });
 
     expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
     expect(res.body.assessment._id).toBeDefined();
     assessmentId = res.body.assessment._id;
+  });
+
+  it('POST /api/assessments should reject duplicate assessment title', async () => {
+    const res = await request(app)
+      .post('/api/assessments')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send({ title: testTitle });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+    expect(res.body.message).toMatch(/already exists/i);
   });
 
   it('POST /api/assessments/:id/guideline should upload and extract guideline PDF', async () => {
