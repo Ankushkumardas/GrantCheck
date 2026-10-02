@@ -30,6 +30,15 @@ app.use((req, res, next) => {
   next();
 });
 
+// Root health check route
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    success: true, 
+    message: 'Grant Application Completeness Assistant API is running successfully on Render! 🚀',
+    version: '1.0.0'
+  });
+});
+
 // Mount main API
 app.use('/api', routes);
 
