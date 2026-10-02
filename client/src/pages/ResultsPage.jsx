@@ -133,7 +133,7 @@ export default function ResultsPage() {
     try {
       setLoading(true);
       const res = await api.post(`/assessments/${id}/${type}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': undefined }
       });
       if (res.data.success) {
         await fetchResults();

@@ -67,14 +67,14 @@ export default function NewAssessmentPage() {
       const guidelineFormData = new FormData();
       guidelineFormData.append('file', guidelineFile);
       await api.post(`/assessments/${newId}/guideline`, guidelineFormData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': undefined }
       });
 
       // 3. Upload Draft Application
       const appFormData = new FormData();
       appFormData.append('file', applicationFile);
       await api.post(`/assessments/${newId}/application`, appFormData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': undefined }
       });
 
       // 4. Upload Supporting Documents if present
@@ -82,7 +82,7 @@ export default function NewAssessmentPage() {
         const supFormData = new FormData();
         supportingFiles.forEach(f => supFormData.append('files', f));
         await api.post(`/assessments/${newId}/supporting-documents`, supFormData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': undefined }
         });
       }
 
