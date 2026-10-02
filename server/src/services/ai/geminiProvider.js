@@ -6,7 +6,7 @@ class GeminiProvider {
   constructor(apiKey = env.GEMINI_API_KEY, model = env.GEMINI_MODEL) {
     this.name = 'gemini';
     this.apiKey = apiKey;
-    this.model = model || 'gemini-1.5-flash';
+    this.model = model || 'gemini-2.5-flash-lite';
   }
 
   async generateJson(prompt, systemInstruction = '') {
