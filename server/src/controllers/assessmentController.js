@@ -411,13 +411,25 @@ async function getAssessmentSummary(req, res, next) {
         rejectedCount,
         remainingIssuesCount: remainingIssues.length,
         remainingIssuesList: remainingIssues.map(m => {
-          const req = requirements.find(r => r._id.toString() === m.requirementId.toString());
-          return { reqId: req ? req.reqId : 'Unknown', text: req ? req.text : '', status: m.finalStatus };
+          const reqIdObj = m.requirementId?._id ? m.requirementId._id.toString() : m.requirementId?.toString();
+          const req = requirements.find(r => r._id.toString() === reqIdObj || r.reqId === m.reqId);
+          return {
+            reqId: req ? req.reqId : (m.reqId || 'REQ'),
+            text: req ? req.text : (m.aiReason || 'Requirement missing supported evidence'),
+            status: m.finalStatus
+          };
         }),
         unsupportedClaimsCount: unsupportedClaims.length,
         unsupportedClaimsList: unsupportedClaims.map(c => c.claimText),
         clarificationQuestionsCount: clarificationQuestions.length,
-        clarificationQuestionsList: clarificationQuestions.map(q => ({ reqId: q.requirementId, question: q.question })),
+        clarificationQuestionsList: clarificationQuestions.map(q => {
+          const reqIdObj = q.requirementId?._id ? q.requirementId._id.toString() : q.requirementId?.toString();
+          const req = requirements.find(r => r._id.toString() === reqIdObj || r.reqId === q.reqId);
+          return {
+            reqId: req ? req.reqId : (q.reqId?.startsWith('req-') ? q.reqId : 'Question'),
+            question: q.question
+          };
+        }),
         missingSupportingDocsCount: (assessment.missingSupportingDocuments || []).filter(d => d.status === 'MISSING').length,
         missingSupportingDocsList: (assessment.missingSupportingDocuments || []).filter(d => d.status === 'MISSING').map(d => d.documentName),
         reviewedAt: assessment.reviewedSummary?.reviewedAt || assessment.updatedAt

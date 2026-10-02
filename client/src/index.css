@@ -26,3 +26,60 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* Dedicated Print Styles: Fit cleanly on single page */
+@media print {
+  @page {
+    margin: 12mm 15mm;
+    size: A4 portrait;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  /* Hide background page elements */
+  body > #root > div > *:not(#print-container-wrapper),
+  nav,
+  aside,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Force print target to take full page cleanly */
+  .printable-summary {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .printable-summary * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Compact spacing when printing so it never spills over to 3 pages */
+  .printable-summary .print-compact-p {
+    padding: 6px 10px !important;
+  }
+
+  .printable-summary .print-compact-space {
+    gap: 8px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .printable-summary .print-compact-text {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+  }
+}
