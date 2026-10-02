@@ -1,0 +1,34 @@
+{
+  "name": "grant-application-completeness-assistant",
+  "version": "1.0.0",
+  "description": "Full-stack Grant Application Completeness Review Assistant with AI Workflow and Human Review",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "start": "node server/src/server.js",
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "generate-samples": "node scripts/generateSamplePdfs.js",
+    "test": "npm run test --workspace=server",
+    "test:unit": "npm run test:unit --workspace=server",
+    "test:integration": "npm run test:integration --workspace=server",
+    "test:e2e": "npx playwright test",
+    "build": "npm run build --workspace=client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "grant-completeness",
+    "ai-workflow",
+    "evidence-mapping",
+    "human-in-the-loop",
+    "mern"
+  ],
+  "author": "",
+  "license": "ISC"
+}
