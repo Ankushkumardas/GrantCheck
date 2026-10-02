@@ -16,4 +16,3 @@ yarn-error.log*
 .playwright-reports/
 test-results/
 testing/
-sample-documents/
