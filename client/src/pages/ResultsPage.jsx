@@ -132,15 +132,24 @@ export default function ResultsPage() {
 
     try {
       setLoading(true);
-      const res = await api.post(`/assessments/${id}/${type}`, formData, {
-        headers: { 'Content-Type': undefined }
+      const token = localStorage.getItem('grant_assistant_token');
+      const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
+      
+      const res = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/assessments/${id}/${type}`, {
+        method: 'POST',
+        headers: authHeader,
+        body: formData
       });
-      if (res.data.success) {
+      
+      if (res.ok) {
         await fetchResults();
+      } else {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Upload failed');
       }
     } catch (err) {
       console.error('Upload failed', err);
-      alert('Upload failed: ' + (err.response?.data?.message || err.message));
+      alert('Upload failed: ' + err.message);
       setLoading(false);
     }
   };

@@ -66,23 +66,34 @@ export default function NewAssessmentPage() {
       // 2. Upload Guideline
       const guidelineFormData = new FormData();
       guidelineFormData.append('file', guidelineFile);
-      await api.post(`/assessments/${newId}/guideline`, guidelineFormData, {
-        headers: { 'Content-Type': undefined }
+      const token = localStorage.getItem('grant_assistant_token');
+      const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
+      
+      const guidelineRes = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/assessments/${newId}/guideline`, {
+        method: 'POST',
+        headers: authHeader,
+        body: guidelineFormData
       });
+      if (!guidelineRes.ok) throw new Error('Failed to upload guideline.');
 
       // 3. Upload Draft Application
       const appFormData = new FormData();
       appFormData.append('file', applicationFile);
-      await api.post(`/assessments/${newId}/application`, appFormData, {
-        headers: { 'Content-Type': undefined }
+      const appRes = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/assessments/${newId}/application`, {
+        method: 'POST',
+        headers: authHeader,
+        body: appFormData
       });
+      if (!appRes.ok) throw new Error('Failed to upload application.');
 
       // 4. Upload Supporting Documents if present
       if (supportingFiles.length > 0) {
         const supFormData = new FormData();
         supportingFiles.forEach(f => supFormData.append('files', f));
-        await api.post(`/assessments/${newId}/supporting-documents`, supFormData, {
-          headers: { 'Content-Type': undefined }
+        await fetch(`${import.meta.env.VITE_API_URL || '/api'}/assessments/${newId}/supporting-documents`, {
+          method: 'POST',
+          headers: authHeader,
+          body: supFormData
         });
       }
 
