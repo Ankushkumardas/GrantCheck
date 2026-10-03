@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const env = require('./env');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const logger = require('./logger');
 
 let memoryServer = null;
@@ -19,7 +20,6 @@ async function connectDB() {
     if (env.NODE_ENV !== 'production') {
       try {
         logger.info('Starting fallback MongoDB In-Memory Server for frictionless local development/testing...', { event: 'db_in_memory_fallback' });
-        const { MongoMemoryServer } = require('mongodb-memory-server');
         memoryServer = await MongoMemoryServer.create();
         const memUri = memoryServer.getUri();
         await mongoose.connect(memUri);

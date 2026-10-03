@@ -15,6 +15,7 @@ const {
 } = require('../controllers/assessmentController');
 const { upload } = require('../middleware/upload');
 const { authMiddleware } = require('../middleware/auth');
+const { apiLimiter } = require('../middleware/rateLimiter');
 
 // Assessments CRUD
 router.post('/', authMiddleware, createAssessment);
@@ -28,8 +29,8 @@ router.post('/:id/application', authMiddleware, upload.single('file'), uploadApp
 router.post('/:id/supporting-documents', authMiddleware, upload.array('files', 10), uploadSupportingDocuments);
 
 // AI Analysis Workflow
-router.post('/:id/analyze', authMiddleware, runAnalysis);
-router.post('/:id/rerun', authMiddleware, rerunAssessment);
+router.post('/:id/analyze', authMiddleware, apiLimiter, runAnalysis);
+router.post('/:id/rerun', authMiddleware, apiLimiter, rerunAssessment);
 
 // Results and Summaries
 router.get('/:id/results', authMiddleware, getAssessmentResults);
